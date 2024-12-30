@@ -1,0 +1,17 @@
+Box ID,Box Category,Dimensions (cm),Weight (kg),Fragility,Load Bearing (kg),Quantity,Shape of Packaging,Packaging Type,Temperature Recommended,Products Packed in Box
+B015,Food,55x35x25,12,High,35,3,Rectangular,Plastic,Cool,Dark Chocolate, Protein Bars
+B016,Food,45x30x20,10,Medium,25,5,Square,Carton,Room Temperature,Pasta, Spaghetti
+B017,Pharma,25x20x15,3,High,10,4,Rectangular,Plastic,Cool,Cough Syrup, Paracetamol Tablets
+B018,Pharma,40x30x25,8,High,20,3,Square,Carton,Cool,Bandages, Antiseptic Creams
+B019,Cosmetics,30x25x20,7,Medium,15,2,Rectangular,Plastic,Cool,Foundation, Makeup Brushes
+B020,Beverages,50x30x30,18,Low,40,5,Rectangular,Carton,Room Temperature,Coffee Cans, Tea Bags
+B021,Electronics,35x25x20,6,High,25,4,Square,Plastic,Cool,USB Drives, Wireless Chargers
+B022,Food,60x40x30,15,Medium,50,3,Rectangular,Carton,Room Temperature,Rice, Lentils
+B023,Food,50x30x25,12,Low,40,2,Rectangular,Plastic,Room Temperature,Popcorn Packets, Nachos
+B024,Beverages,40x25x20,10,Medium,30,5,Square,Carton,Room Temperature,Cold Brew Bottles, Lemonade Packs
+B025,Cosmetics,20x15x10,3,Low,10,4,Rectangular,Plastic,Cool,Nail Polish, Eye Shadow Kits
+B026,Pharma,30x20x15,5,High,15,3,Square,Carton,Cool,Protein Supplements, Omega-3 Capsules
+B027,Electronics,25x20x15,4,Medium,20,4,Rectangular,Plastic,Cool,Smart Watches, Wireless Keyboards
+B028,Food,40x30x20,10,Low,50,3,Rectangular,Plastic,Room Temperature,Salted Nuts, Potato Chips
+B029,Cosmetics,35x25x20,6,Medium,20,2,Square,Carton,Cool,Hair Serums, Body Lotions
+B030,Beverages,45x35x25,14,Low,50,2,Rectangular,Plastic,Room Temperature,Sparkling Water, Energy Drinks
