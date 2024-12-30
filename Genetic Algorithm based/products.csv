@@ -1,0 +1,16 @@
+Name,Length,Width,Height,Weight,Quantity,Fragility,LoadBear,ShapeType,BoxingType,Priority,Bundle
+Industrial CNC Machine,2.20,1.80,1.90,2800,1,MEDIUM,3000,REGULAR,Steel Crate,1,NO
+Automotive Parts Pallet,1.20,1.00,0.90,750,3,LOW,1500,REGULAR,Wooden Pallet,2,YES
+Electronic Server Racks,0.80,1.20,1.80,400,2,HIGH,500,REGULAR,Shock-Mount Case,1,NO
+Medical Equipment,1.50,0.90,1.20,350,2,HIGH,400,REGULAR,Foam-Lined Case,1,NO
+Chemical Drums,0.60,0.60,0.90,200,4,MEDIUM,800,REGULAR,Plastic Drum,3,YES
+Consumer Electronics,1.20,0.80,1.00,180,5,HIGH,300,REGULAR,Cardboard Box,2,YES
+Glass Panels,2.00,1.50,0.30,300,3,HIGH,200,REGULAR,Wooden Crate,2,YES
+Textile Rolls,1.80,0.40,0.40,50,6,LOW,1000,REGULAR,Cardboard Tube,3,YES
+Office Furniture,1.40,0.80,1.20,120,4,MEDIUM,600,REGULAR,Cardboard Box,3,NO
+Solar Panels,1.65,1.00,0.20,80,8,HIGH,150,REGULAR,Wooden Frame,2,YES
+Machinery Spare Parts,1.00,0.80,0.60,400,3,MEDIUM,1200,REGULAR,Metal Box,2,YES
+Plastic Raw Materials,1.20,1.00,1.00,600,2,LOW,2000,REGULAR,Big Bag,3,YES
+Food Processing Unit,1.80,1.20,1.60,900,1,MEDIUM,1500,REGULAR,Steel Frame,1,NO
+Laboratory Equipment,1.00,0.80,1.20,250,3,HIGH,300,REGULAR,Foam Case,1,NO
+Air Conditioning Units,1.20,0.80,1.00,180,4,MEDIUM,500,REGULAR,Cardboard Box,2,YES

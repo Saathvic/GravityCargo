@@ -1,0 +1,16 @@
+Name,Length,Width,Height,Weight,Quantity,Fragility,LoadBear,ShapeType,BoxingType,Bundle
+Standard Pallet A,1.20,1.00,1.60,1200,4,LOW,2500,REGULAR,Wooden Pallet,YES
+Standard Pallet B,1.20,0.80,1.40,800,6,LOW,2000,REGULAR,Wooden Pallet,YES
+IBC Container,1.00,1.20,1.17,1000,3,MEDIUM,1800,REGULAR,Plastic Container,NO
+Euro Pallet Stack,1.20,0.80,2.00,750,4,MEDIUM,1500,REGULAR,Wood Pallet,YES
+Steel Crate Large,2.40,1.80,1.90,2000,2,LOW,3500,REGULAR,Steel Frame,NO
+Cardboard Boxes,0.60,0.40,0.40,25,20,MEDIUM,100,REGULAR,Cardboard,YES
+Drum Stack,0.60,0.60,0.90,200,8,MEDIUM,800,REGULAR,Steel Drum,YES
+Machine Parts Box,1.20,0.80,0.60,400,5,LOW,1200,REGULAR,Wooden Crate,YES
+Equipment Rack,0.80,1.00,1.80,350,3,HIGH,600,REGULAR,Metal Frame,NO
+Storage Cabinet,1.10,0.90,2.00,300,4,MEDIUM,800,REGULAR,Metal Cabinet,NO
+Tool Container,2.00,1.90,1.80,1500,2,LOW,2800,REGULAR,Steel Container,NO
+Box Palette Mixed,1.20,1.00,1.20,600,5,LOW,1500,REGULAR,Mixed,YES
+Small Parts Boxes,0.40,0.30,0.30,15,30,LOW,50,REGULAR,Cardboard,YES
+Medium Crates,0.90,0.70,0.80,150,10,MEDIUM,400,REGULAR,Wooden Crate,YES
+Heavy Equipment,2.20,1.60,1.80,2500,1,HIGH,3000,REGULAR,Steel Frame,NO

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GravicARgo - Detailed Packing Report</title>
+  </head>
+  <link
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .metric-card {
+            transition: transform 0.2s;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        .stability-warning {
+            color: #dc3545;
+        }
+        .chart-container {
+            height: 300px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container my-4">
+        <h1 class="text-center mb-4">Detailed Packing Report</h1>
+        
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card metric-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Volume Utilization</h5>
+                        <p class="display-6">{{ report.summary.volume_utilization }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card metric-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Weight Balance</h5>
+                        <p class="display-6">{{ report.summary.weight_balance_score }}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Add more summary cards -->
+        </div>
+
+        <!-- Detailed Analysis -->
+        <div class="row">
+            <!-- Layer Distribution -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Layer Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="layerChart" class="chart-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stability Analysis -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Stability Analysis</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Overall Stability Score: {{ report.placement_analysis.stability_analysis.overall_stability }}</p>
+                        {% if report.placement_analysis.stability_analysis.critical_points %}
+                        <div class="alert alert-warning">
+                            <h6>Critical Points:</h6>
+                            <ul>
+                            {% for point in report.placement_analysis.stability_analysis.critical_points %}
+                                <li>{{ point.item }} - {{ point.issue }}</li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Item Details Table -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Packed Items Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Position</th>
+                                <th>Dimensions</th>
+                                <th>Weight</th>
+                                <th>Stability Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in report.packed_items %}
+                            <tr>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.position|join(', ') }}</td>
+                                <td>{{ item.dimensions|join(' × ') }}</td>
+                                <td>{{ item.weight }} kg</td>
+                                <td>{{ report.placement_analysis.stability_analysis.item_stability[item.name].overall }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center">
+            <a href="/download_report" class="btn btn-primary">
+                <i class="fas fa-download me-2"></i>Download Full Report
+            </a>
+            <a href="/" class="btn btn-secondary ms-2">
+                <i class="fas fa-redo me-2"></i>New Optimization
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        // Add visualization scripts for layer distribution and other charts
+        const layerData = {{ report.placement_analysis.layer_distribution|tojson }};
+        
+        // Create layer distribution chart
+        const layers = Object.keys(layerData);
+        const itemCounts = layers.map(layer => layerData[layer].length);
+        
+        Plotly.newPlot('layerChart', [{
+            x: layers,
+            y: itemCounts,
+            type: 'bar',
+            name: 'Items per Layer'
+        }], {
+            title: 'Items Distribution by Layer Height',
+            xaxis: { title: 'Layer Height (m)' },
+            yaxis: { title: 'Number of Items' }
+        });
+    </script>
+</body>
+</html>
+
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+</html>

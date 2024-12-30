@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html></html>
+<head> </head>
+<title>GravicARgo - Container Optimization</title>
+<link <link <link <style />
+href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css"
+rel="stylesheet" />
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+.setup-wizard { rel="stylesheet" /> background: white;
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+border-radius: 20px; rel="stylesheet" /> box-shadow: 0 10px 30px
+rgba(0,0,0,0.1); overflow: hidden; } .wizard-step { display: none; padding:
+2rem; } .wizard-step.active { display: block; animation: slideIn 0.5s ease; }
+.step-indicator { background: #f8f9fa; padding: 1rem; border-bottom: 1px solid
+#eee; } .step-bubble { width: 40px; height: 40px; border-radius: 50%;
+background: #e9ecef; display: flex; align-items: center; justify-content:
+center; margin: 0 auto 10px; transition: all 0.3s ease; } .step-bubble.active {
+background: var(--primary-color); color: white; } .container-preview { border:
+2px dashed #dee2e6; border-radius: 10px; padding: 1rem; margin-top: 1rem;
+min-height: 200px; position: relative; } .container-preview.active {
+border-color: var(--primary-color); background: rgba(74,144,226,0.05); }
+.csv-preview { max-height: 400px; overflow-y: auto; margin-top: 1rem;
+border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); } @keyframes slideIn
+{ from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform:
+translateX(0); } } .navigation-buttons { margin-top: 2rem; padding-top: 1rem;
+
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="setup-wizard">
+            <!-- Step indicators -->
+            <div class="step-indicator">
+                <div class="row text-center">
+                    <div class="col-4">
+                        <div class="step-bubble active">1</div>
+                        <div>Container Setup</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="step-bubble">2</div>
+                        <div>Item Upload</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="step-bubble">3</div>
+                        <div>Review</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 1: Container Setup -->
+            <div class="wizard-step active" id="step1">
+                <h3 class="mb-4">Container Configuration</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label class="form-label">Transport Mode</label>
+                            <select class="form-select" id="transport_mode" required>
+                                {% for mode_id, (mode_name, containers) in transport_modes.items() %}
+                                <option value="{{ mode_id }}">{{ mode_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-4" id="container_type_group">
+                            <label class="form-label">Container Type</label>
+                            <select class="form-select" id="container_type">
+                                <!-- Will be populated via JavaScript -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="container-preview">
+                            <div id="container3DPreview"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Item Upload -->
+            <div class="wizard-step" id="step2">
+                <h3 class="mb-4">Upload Items</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="file-upload-container">
+                            <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                            <h5>Drag & Drop CSV File</h5>
+                            <p class="text-muted">or</p>
+                            <input type="file" class="form-control" id="csvFile" accept=".csv">
+                            <div class="mt-3">
+                                <a href="/static/templates/template.csv" class="btn btn-outline-primary">
+                                    <i class="fas fa-download me-2"></i>Download Template
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="csv-preview">
+                            <table class="table" id="csvPreviewTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Dimensions</th>
+                                        <th>Weight</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Review -->
+            <div class="wizard-step" id="step3">
+                <h3 class="mb-4">Review Configuration</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>Container Details</h5>
+                                <dl class="row">
+                                    <dt class="col-sm-4">Transport Mode:</dt>
+                                    <dd class="col-sm-8" id="reviewTransportMode"></dd>
+                                    <dt class="col-sm-4">Container Type:</dt>
+                                    <dd class="col-sm-8" id="reviewContainerType"></dd>
+                                    <dt class="col-sm-4">Dimensions:</dt>
+                                    <dd class="col-sm-8" id="reviewDimensions"></dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>Items Summary</h5>
+                                <dl class="row">
+                                    <dt class="col-sm-4">Total Items:</dt>
+                                    <dd class="col-sm-8" id="reviewTotalItems"></dd>
+                                    <dt class="col-sm-4">Total Weight:</dt>
+                                    <dd class="col-sm-8" id="reviewTotalWeight"></dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation buttons -->
+            <div class="navigation-buttons px-4">
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-secondary" id="prevBtn" onclick="navigateStep(-1)">
+                        <i class="fas fa-arrow-left me-2"></i>Previous
+                    </button>
+                    <button class="btn btn-primary" id="nextBtn" onclick="navigateStep(1)">
+                        Next<i class="fas fa-arrow-right ms-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="{{ url_for('static', filename='js/optimize.js') }}"></script>
+</body>
+</html>

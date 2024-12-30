@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GravitycARgo - 3D Container Loading Optimizer</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ url_for('static', filename='css/style.css') }}"
+      rel="stylesheet"
+    />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"
+    />
+    <style>
+      :root {
+        --primary: #0b2447;
+        --secondary: #19376d;
+        --accent: #576cbc;
+        --light: #a5d7e8;
+        --surface: #ffffff;
+      }
+
+      .wizard-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+      }
+
+      .wizard-header {
+        background: var(--surface);
+        padding: 2rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .wizard-step {
+        display: none;
+        padding: 2rem;
+        opacity: 0;
+        transform: translateX(20px);
+        transition: all 0.3s ease;
+      }
+
+      .wizard-step.active {
+        display: block;
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .step-indicator {
+        display: flex;
+        justify-content: space-between;
+        margin: 2rem 0;
+        position: relative;
+        padding: 0 2rem;
+      }
+
+      .step-indicator::before {
+        content: "";
+        position: absolute;
+        top: 20px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #e0e0e0;
+        z-index: 1;
+      }
+
+      .step {
+        position: relative;
+        z-index: 2;
+        background: white;
+        padding: 0 1rem;
+        text-align: center;
+      }
+
+      .step-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e0e0e0;
+        color: #666;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 0.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .step.active .step-circle {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 0 0 3px rgba(11, 36, 71, 0.2);
+      }
+
+      .form-section {
+        margin-bottom: 2rem;
+      }
+
+      .form-control,
+      .form-select {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 0.8rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(11, 36, 71, 0.1);
+      }
+
+      .upload-zone {
+        border: 2px dashed var(--primary);
+        border-radius: 15px;
+        padding: 3rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .upload-zone:hover,
+      .upload-zone.drag-over {
+        background: rgba(11, 36, 71, 0.05);
+        border-color: var(--accent);
+      }
+
+      .nav-buttons {
+        padding: 1rem 2rem;
+        background: #f8f9fa;
+        border-top: 1px solid #eee;
+      }
+
+      .custom-btn {
+        padding: 0.8rem 2rem;
+        border-radius: 10px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .custom-btn-primary {
+        background: var(--primary);
+        color: white;
+        border: none;
+      }
+
+      .custom-btn-primary:hover {
+        background: var(--secondary);
+        transform: translateY(-2px);
+      }
+
+      .select2-container--default .select2-selection--single {
+        height: 50px;
+        padding: 10px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+      }
+
+      .select2-container--default
+        .select2-selection--single
+        .select2-selection__arrow {
+        height: 48px;
+      }
+
+      .container-preview {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-top: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .container-preview::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(to right, var(--primary), var(--accent));
+      }
+
+      .dimension-box {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-top: 1rem;
+        border: 1px solid #dee2e6;
+      }
+
+      .dimension-value {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      .container-type-icon {
+        font-size: 2rem;
+        color: var(--accent);
+        margin-bottom: 1rem;
+      }
+
+      .mode-card {
+        border: 2px solid transparent;
+        border-radius: 12px;
+        padding: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: white;
+        height: 100%;
+      }
+
+      .mode-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        border-color: var(--accent);
+      }
+
+      .mode-card.selected {
+        border-color: var(--primary);
+        background: rgba(74, 144, 226, 0.05);
+      }
+
+      .mode-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--primary);
+      }
+
+      .custom-dimensions {
+        background: linear-gradient(45deg, #f8f9fa, #ffffff);
+        border-radius: 15px;
+        padding: 2rem;
+        margin-top: 2rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .dimension-input {
+        position: relative;
+        margin-bottom: 1rem;
+      }
+
+      .dimension-input input {
+        padding-right: 3rem;
+      }
+
+      .dimension-input::after {
+        content: "m";
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+      }
+
+      .transport-mode-section {
+        margin-bottom: 2rem;
+      }
+
+      .container-options {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+        border: 1px solid #dee2e6;
+        transition: all 0.3s ease;
+      }
+
+      .container-card {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        height: 100%;
+      }
+
+      .container-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-color: var(--accent);
+      }
+
+      .container-card.selected {
+        border-color: var(--primary);
+        background: rgba(74, 144, 226, 0.05);
+      }
+
+      .container-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .dimensions,
+      .volume {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+      }
+
+      .dimensions span,
+      .volume span {
+        color: var(--primary);
+        font-weight: 500;
+      }
+
+      .form-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .file-upload-container {
+        border: 2px dashed var(--primary-color);
+        border-radius: 10px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+      }
+
+      .file-upload-container:hover {
+        border-color: var(--accent-color);
+        background: rgba(74, 144, 226, 0.05);
+      }
+
+      .preview-container {
+        margin-top: 2rem;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      /* Add styles for container type display */
+      .container-type-preview {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        display: none;
+      }
+
+      .container-type-preview.active {
+        display: block;
+      }
+
+      .dimension-display {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.5rem;
+      }
+
+      .dimension-label {
+        font-weight: 500;
+        color: #666;
+      }
+
+      .form-select {
+        background-color: white;
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        border: 2px solid #e0e0e0;
+      }
+
+      .form-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(11, 36, 71, 0.25);
+      }
+
+      .form-select option {
+        padding: 10px;
+      }
+
+      .form-select:disabled {
+        background-color: #e9ecef;
+      }
+
+      .btn-primary {
+        background-color: var(--primary) !important;
+        border-color: var(--primary) !important;
+        color: white !important;
+        font-weight: 500;
+        padding: 1rem 2rem;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--secondary) !important;
+        border-color: var(--secondary) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .container-type-preview {
+        margin-top: 1rem;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border: 1px solid #dee2e6;
+        display: none;
+      }
+
+      .container-type-preview.active {
+        display: block;
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* New Modern UI Enhancements */
+      .page-wrapper {
+        background: linear-gradient(135deg, var(--light) 0%, #ffffff 100%);
+        min-height: 100vh;
+        padding: 2rem 0;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 24px;
+      }
+
+      .floating-label {
+        position: absolute;
+        top: -10px;
+        left: 10px;
+        background: white;
+        padding: 0 8px;
+        color: var(--primary);
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+      }
+
+      .animate-pulse {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Enhanced Responsive Design */
+      @media (max-width: 768px) {
+        .wizard-container {
+          margin: 1rem;
+          padding: 1rem;
+        }
+
+        .step-indicator {
+          flex-direction: column;
+          align-items: center;
+          gap: 1rem;
+        }
+
+        .dimension-input {
+          margin-bottom: 1.5rem;
+        }
+      }
+
+      /* Modern Form Elements */
+      .form-control,
+      .form-select {
+        height: 3.5rem;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      /* Enhanced Upload Zone */
+      .upload-zone {
+        background: linear-gradient(145deg, #ffffff, #f5f5f5);
+        box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+      }
+
+      .upload-progress {
+        width: 100%;
+        height: 4px;
+        background: #eee;
+        border-radius: 2px;
+        margin-top: 1rem;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        width: 0%;
+        height: 100%;
+        background: var(--primary);
+        transition: width 0.3s ease;
+      }
+
+      /* Interactive Elements */
+      .interactive-btn {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .interactive-btn::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+      }
+
+      .interactive-btn:hover::after {
+        width: 300%;
+        height: 300%;
+      }
+
+      /* Modern Background Animation */
+      .bg-animate {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: linear-gradient(45deg, var(--light) 0%, #ffffff 100%);
+        overflow: hidden;
+      }
+
+      .bg-animate::before {
+        content: "";
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, var(--accent) 0%, transparent 50%);
+        animation: pulse-bg 15s infinite;
+        opacity: 0.1;
+      }
+
+      @keyframes pulse-bg {
+        0% {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        100% {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+
+      /* Modern Card Design */
+      .glass-morphism {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 24px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .glass-morphism:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12),
+          0 4px 8px rgba(0, 0, 0, 0.06);
+      }
+
+      /* Enhanced Form Controls */
+      .floating-input {
+        position: relative;
+        margin-bottom: 2rem;
+      }
+
+      .floating-input input,
+      .floating-input select {
+        height: 3.5rem;
+        padding: 1rem;
+        font-size: 1rem;
+        border-radius: 12px;
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.9);
+        transition: all 0.3s ease;
+        width: 100%;
+      }
+
+      .floating-input label {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        transition: all 0.3s ease;
+        pointer-events: none;
+        color: #666;
+      }
+
+      .floating-input input:focus ~ label,
+      .floating-input input:not(:placeholder-shown) ~ label,
+      .floating-input select:focus ~ label,
+      .floating-input select:not([value=""]) ~ label {
+        top: 0;
+        font-size: 0.85rem;
+        padding: 0 0.5rem;
+        background: white;
+        color: var(--primary);
+      }
+
+      /* Creative Upload Zone */
+      .upload-zone {
+        background: linear-gradient(145deg, #ffffff, #f8f9fa);
+        border: 3px dashed var(--accent);
+        border-radius: 20px;
+        padding: 3rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .upload-zone::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          transparent 48%,
+          var(--accent) 50%,
+          transparent 52%
+        );
+        background-size: 200% 200%;
+        opacity: 0.1;
+        transition: all 0.3s ease;
+      }
+
+      .upload-zone:hover::before {
+        animation: shine 1.5s infinite;
+      }
+
+      @keyframes shine {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      /* Pulsing Submit Button */
+      .submit-btn {
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        border: none;
+        border-radius: 12px;
+        padding: 1rem 3rem;
+        color: white;
+        font-weight: 500;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        transform-style: preserve-3d;
+      }
+
+      .submit-btn::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 120%;
+        height: 120%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.3) 0%,
+          transparent 60%
+        );
+        transform: translate(-50%, -50%);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: translate(-50%, -50%) scale(0.8);
+          opacity: 0;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1.2);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-animate"></div>
+    <div class="page-wrapper">
+      <nav
+        class="navbar navbar-expand-lg navbar-dark bg-primary glass-card mb-4"
+      >
+        <div class="container">
+          <a class="navbar-brand" href="/">
+            <i class="fas fa-cube me-2"></i>
+            <span class="fw-bold">Gravity cARgo</span>
+          </a>
+          <!-- Add responsive navbar items here -->
+        </div>
+      </nav>
+
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 col-md-10 col-sm-12">
+            <div class="glass-morphism p-4" data-aos="fade-up">
+              <div class="form-section">
+                <h2 class="text-center mb-4">
+                  <i class="fas fa-cube me-2"></i>3D Container Loading Optimizer
+                </h2>
+
+                <form
+                  id="optimizerForm"
+                  action="/optimize"
+                  method="post"
+                  enctype="multipart/form-data"
+                  class="needs-validation"
+                  novalidate
+                >
+                  <!-- Transport Mode Section -->
+                  <div class="mb-4">
+                    <label class="form-label">Transport Mode</label>
+                    <select
+                      class="form-select form-select-lg mb-3"
+                      name="transport_mode"
+                      id="transport_mode"
+                      required
+                    >
+                      <option value="">Select Transport Mode</option>
+                      {% for mode in data.transport_modes %}
+                      <option value="{{ mode.id }}">{{ mode.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <!-- Container Type Section -->
+                  <div class="mb-4" id="container_type_group">
+                    <label class="form-label">Container Type</label>
+                    <select
+                      class="form-select form-select-lg mb-3"
+                      name="container_type"
+                      id="container_type"
+                      required
+                      disabled
+                    >
+                      <option value="">Select Container Type</option>
+                    </select>
+
+                    <div class="container-type-preview" id="containerPreview">
+                      <div class="dimension-display">
+                        <span class="dimension-label">Length:</span>
+                        <span id="lengthValue">-</span>
+                      </div>
+                      <div class="dimension-display">
+                        <span class="dimension-label">Width:</span>
+                        <span id="widthValue">-</span>
+                      </div>
+                      <div class="dimension-display">
+                        <span class="dimension-label">Height:</span>
+                        <span id="heightValue">-</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Custom Dimensions Section -->
+                  <div class="mb-4 d-none" id="custom_dimensions">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="dimension-input">
+                          <label class="form-label">Length</label>
+                          <input
+                            type="number"
+                            step="0.01"
+                            class="form-control"
+                            name="length"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="dimension-input">
+                          <label class="form-label">Width</label>
+                          <input
+                            type="number"
+                            step="0.01"
+                            class="form-control"
+                            name="width"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="dimension-input">
+                          <label class="form-label">Height</label>
+                          <input
+                            type="number"
+                            step="0.01"
+                            class="form-control"
+                            name="height"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- File Upload Section -->
+                  <div class="mb-4">
+                    <div class="upload-zone" id="dropZone">
+                      <i
+                        class="fas fa-cloud-upload-alt fa-3x mb-3 text-primary"
+                      ></i>
+                      <h4>Drag & Drop CSV File</h4>
+                      <p class="text-muted">or</p>
+                      <input type="file" class="form-control"
+                      fileInput.dispatchEvent(new Event('change')); name="file"
+                      accept=".csv" required />
+                      <div class="mt-3">
+                        <a
+                          href="/static/templates/template.csv"
+                          class="btn btn-outline-primary"
+                        >
+                          <i class="fas fa-download me-2"></i>Download Template
+                        </a>
+                      </div>
+                    </div>
+                    <div id="csvPreview" class="mt-4 d-none">
+                      <h5>CSV Preview</h5>
+                      <div class="table-responsive">
+                        <table class="table table-sm">
+                          <thead id="csvHeader"></thead>
+                          <tbody id="csvData"></tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Submit Button -->
+                  <div class="text-center mt-4">
+                    <button
+                      type="submit"
+                      class="btn btn-primary interactive-btn"
+                    >
+                      <i class="fas fa-check me-2"></i>Optimize Loading
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"></script>
+    <script>
+      // Initialize AOS
+      AOS.init({
+        duration: 1000,
+        once: true
+      });
+
+      // Add tilt effect to cards
+      VanillaTilt.init(document.querySelectorAll(".glass-morphism"), {
+        max: 3,
+        speed: 400,
+        glare: true,
+        "max-glare": 0.2
+      });
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const defaultData = {{ data|tojson|safe if data else '{}' }};
+        const transportMode = document.getElementById('transport_mode');
+        const containerType = document.getElementById('container_type');
+        const customDimensions = document.getElementById('custom_dimensions');
+        const containerPreview = document.getElementById('containerPreview');
+        const fileInput = document.querySelector('input[type="file"]');
+        const dropZone = document.getElementById('dropZone');
+
+        // Transport mode change handler
+        transportMode.addEventListener('change', function() {
+          containerType.disabled = false;
+          containerType.innerHTML = '<option value="">Select Container Type</option>';
+
+          if (this.value === '5') {
+            customDimensions.classList.remove('d-none');
+            containerType.disabled = true;
+            containerPreview.classList.remove('active');
+          } else {
+            customDimensions.classList.add('d-none');
+            const mode = defaultData.transport_modes.find(m => m.id === this.value);
+            if (mode && mode.containers) {
+              mode.containers.forEach(container => {
+                const option = document.createElement('option');
+                option.value = container.name;
+                option.textContent = `${container.name} (${container.dimensions.join('m × ')}m)`;
+                containerType.appendChild(option);
+              });
+            }
+          }
+        });
+
+        // Container type change handler
+        containerType.addEventListener('change', function() {
+          if (this.value) {
+            const mode = defaultData.transport_modes.find(m => m.id === transportMode.value);
+            const container = mode.containers.find(c => c.name === this.value);
+            if (container) {
+              document.getElementById('lengthValue').textContent = container.dimensions[0] + 'm';
+              document.getElementById('widthValue').textContent = container.dimensions[1] + 'm';
+              document.getElementById('heightValue').textContent = container.dimensions[2] + 'm';
+              document.getElementById('volumeValue').textContent = container.volume.toFixed(2) + ' m³';
+              containerPreview.classList.add('active');
+            }
+          } else {
+            containerPreview.classList.remove('active');
+          }
+        });
+
+        // Enhance form controls with floating labels
+        document.querySelectorAll('.form-control, .form-select').forEach(element => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'position-relative';
+          element.parentNode.insertBefore(wrapper, element);
+          wrapper.appendChild(element);
+
+          const label = element.previousElementSibling;
+          if (label && label.classList.contains('form-label')) {
+            label.classList.add('floating-label');
+            wrapper.appendChild(label);
+          }
+        });
+
+        // File upload handling
+        fileInput.addEventListener('change', function(e) {
+          const progressBar = document.createElement('div');
+          progressBar.className = 'upload-progress';
+          progressBar.innerHTML = '<div class="progress-bar"></div>';
+          this.parentNode.appendChild(progressBar);
+
+          const bar = progressBar.querySelector('.progress-bar');
+          let progress = 0;
+          const interval = setInterval(() => {
+            progress += 5;
+            bar.style.width = `${progress}%`;
+            if (progress >= 100) {
+              clearInterval(interval);
+              setTimeout(() => progressBar.remove(), 500);
+            }
+          }, 50);
+        });
+
+        // Drag and drop handling
+        dropZone.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', function(e) {
+          dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', function(e) {
+          e.preventDefault();
+          dropZone.classList.remove('drag-over');
+          fileInput.files = e.dataTransfer.files;
+          fileInput.dispatchEvent(new Event('change'));
+        });
+
+        // Form submission handling
+        document.querySelector('form').addEventListener('submit', function(e) {
+          const btn = this.querySelector('button[type="submit"]');
+          btn.innerHTML = '<i class="fas fa-circle-notch fa-spin me-2"></i>Processing...';
+          btn.disabled = true;
+        });
+
+        // Add smooth scroll animation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+              behavior: 'smooth'
+            });
+          });
+        });
+
+        // Enhanced form validation with animations
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+          if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Shake animation for invalid fields
+            document.querySelectorAll(':invalid').forEach(field => {
+              field.closest('.floating-input').classList.add('shake');
+              setTimeout(() => {
+                field.closest('.floating-input').classList.remove('shake');
+              }, 600);
+            });
+          }
+          form.classList.add('was-validated');
+        });
+
+        // Dynamic background effects
+        document.addEventListener('mousemove', function(e) {
+          const mouseX = e.clientX / window.innerWidth;
+          const mouseY = e.clientY / window.innerHeight;
+          document.querySelector('.bg-animate').style.transform =
+            `translate(${mouseX * 20}px, ${mouseY * 20}px)`;
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+Name,Length,Width,Height,Weight,Quantity,Fragility,LoadBear,BoxingType,Bundle
+Standard Pallet A,1.2,0.8,1.6,750,3,LOW,2000,Wooden Pallet,YES
+Standard Pallet B,1.2,0.8,1.2,600,4,LOW,1800,Wooden Pallet,YES
+Euro Pallet Stack,1.2,1.0,1.4,500,3,LOW,1500,Euro Pallet,YES
+Light Boxes Stack,1.2,0.8,1.0,200,4,MEDIUM,600,Cardboard,YES
+Heavy Duty Crate,1.6,1.2,1.4,1200,4,MEDIUM,3000,Steel Crate,NO
+Machinery Parts,1.4,1.0,1.2,800,5,HIGH,1200,Metal Case,NO
+Storage Container,2.4,2.4,1.2,900,2,LOW,2500,Steel Box,NO
+Compact Equipment,1.2,1.0,1.6,600,6,MEDIUM,1000,Metal Frame,NO
+Roll Cage,0.8,0.7,1.8,120,3,LOW,400,Metal Cage,YES
+Small Parts Box,0.6,0.4,0.4,50,6,LOW,200,Plastic Box,YES
+Medium Containers,1.0,0.8,0.8,180,4,MEDIUM,500,Plastic Container,YES
+Long Items Bundle,2.4,0.4,0.3,100,8,LOW,300,Cardboard Tube,YES
+Flat Pack Units,1.2,1.0,0.6,150,12,MEDIUM,400,Flat Pack,YES
+Tool Cabinet,1.0,0.6,1.8,250,6,HIGH,600,Metal Cabinet,NO
+Equipment Case,1.2,0.8,0.6,120,4,HIGH,300,Hard Case,YES

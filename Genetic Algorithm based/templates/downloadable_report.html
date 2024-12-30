@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GravicARgo - Packing Report</title>
+    <style>
+                              body {
+                                font-family: Arial, sans-serif;
+                                margin: 40px;
+                              }
+                              table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin: 20px 0;
+                              }
+                              th,
+                              td {
+                                padding: 8px;
+                                border: 1px solid #ddd;
+                                <h2>Summary</h2>
+                                <div class="metrics">
+                                    <div class="metric">
+                                        <h3>Container Dimensions</h3>
+                                  <p>{{ report.summary.container_dimensions|join(' × ') }} meters</p>
+                              </div>
+                              <div class="metric">
+                                  <h3>Volume Utilization</h3>
+                                  <p>{{ report.summary.volume_utilization }}</p>
+                              </div>
+                              <!-- Add more metrics -->
+                          </div>
+                      </div>
+
+                      <div class="section">
+                        <h2>Packed Items ({{ report.packed_items|length }})</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Position</th>
+                                    <th>Dimensions</th>
+                                    <th>Weight</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in report.packed_items %}
+                                <tr>
+                                    <td>{{ item.name }}</td>
+                                    <td>{{ item.position|join(', ') }}</td>
+                                    <td>{{ item.dimensions|join(' × ') }}</td>
+                                    <td>{{ item.weight }} kg</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                  <!-- Add more sections as needed -->
+            </body>
+      </html>
+
+        }
+        th {
+          background-color: #f5f5f5;
+        }
+        .section {
+          margin-bottom: 30px;
+        }
+        .metrics {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 20px;
+        }
+        .metric {
+          padding: 15px;
+          background: #f9f9f9;
+          border-radius: 5px;
+        }
+    </style>
+  </head>
+  <body>
+    <h1>Container Loading Report</h1>
+    <div class="section"></div>
+  </body>
+</html>

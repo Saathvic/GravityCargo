@@ -1,0 +1,6 @@
+2024-12-30 07:19:01,909 INFO: GravitycARgo startup [in d:\PROJECTS\UIP_Y16_1\app.py:709]
+2024-12-30 07:19:02,856 INFO: GravitycARgo startup [in d:\PROJECTS\UIP_Y16_1\app.py:709]
+2024-12-30 07:20:13,908 INFO: GravitycARgo startup [in d:\PROJECTS\UIP_Y16_1\app.py:709]
+2024-12-30 07:21:11,125 INFO: GravitycARgo startup [in d:\PROJECTS\UIP_Y16_1\app.py:709]
+2024-12-30 07:21:12,070 INFO: GravitycARgo startup [in d:\PROJECTS\UIP_Y16_1\app.py:709]
+2024-12-30 07:21:55,498 ERROR: Error generating report: 'Item' object has no attribute 'load_bear' [in d:\PROJECTS\UIP_Y16_1\app.py:362]

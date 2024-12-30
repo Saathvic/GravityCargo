@@ -1,0 +1,2 @@
+Name,Length,Width,Height,Weight,Quantity,Fragility,LoadBear,ShapeType,BoxingType,Priority,Bundle
+Example Item,1.20,1.00,1.60,1200,4,LOW,2500,REGULAR,Wooden Pallet,1,YES

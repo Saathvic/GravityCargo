@@ -1,0 +1,15 @@
+Name,Length,Width,Height,Weight,Quantity,Fragility,Stackable,BoxingType,Bundle
+B001,1.0,0.6,0.5,10,5,High,YES,Carton,YES
+B002,0.8,0.5,0.4,8,10,Medium,YES,Plastic,YES
+B003,1.2,0.8,0.6,15,3,Medium,YES,Carton,YES
+B004,0.9,0.6,0.5,12,8,Low,YES,Plastic,YES
+B005,0.6,0.4,0.3,5,20,High,NO,Plastic,NO
+B006,0.7,0.5,0.4,6,15,High,NO,Carton,NO
+B007,1.0,0.6,0.6,18,12,Medium,YES,Plastic,YES
+B008,0.5,0.4,0.3,4,10,High,YES,Carton,NO
+B009,0.6,0.5,0.4,5,8,High,YES,Plastic,NO
+B010,0.4,0.3,0.2,2,25,Medium,NO,Carton,NO
+B011,0.9,0.6,0.5,10,6,Low,YES,Plastic,YES
+B012,0.5,0.4,0.3,4,10,Medium,NO,Carton,NO
+B013,0.8,0.5,0.4,8,10,Low,YES,Plastic,NO
+B014,1.2,0.8,0.7,22,5,Medium,YES,Carton,YES
